@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, Download, BookOpen, GraduationCap } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface Paper {
@@ -29,86 +28,227 @@ interface SemesterData {
   [key: string]: Subject[];
 }
 
+// Mock data for all 8 semesters
+const mockSemesterData: SemesterData = {
+  "1st Semester": [
+    {
+      name: "Mathematics I",
+      papers: {
+        first_ia: [{ id: "1", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample1", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "2", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample2", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "3", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample3", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "4", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample4", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Physics",
+      papers: {
+        first_ia: [{ id: "5", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample5", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "6", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample6", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "7", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample7", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "8", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample8", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Chemistry",
+      papers: {
+        first_ia: [{ id: "9", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample9", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "10", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample10", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "11", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample11", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "12", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample12", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Engineering Graphics",
+      papers: {
+        first_ia: [{ id: "13", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample13", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "14", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample14", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "15", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample15", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "16", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample16", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Basic Electronics",
+      papers: {
+        first_ia: [{ id: "17", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample17", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "18", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample18", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "19", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample19", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "20", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample20", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "2nd Semester": [
+    {
+      name: "Mathematics II",
+      papers: {
+        first_ia: [{ id: "21", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample21", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "22", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample22", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "23", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample23", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "24", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample24", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Engineering Mechanics",
+      papers: {
+        first_ia: [{ id: "25", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample25", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "26", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample26", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "27", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample27", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "28", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample28", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Programming in C",
+      papers: {
+        first_ia: [{ id: "29", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample29", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "30", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample30", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "31", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample31", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "32", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample32", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Material Science",
+      papers: {
+        first_ia: [{ id: "33", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample33", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "34", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample34", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "35", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample35", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "36", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample36", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "3rd Semester": [
+    {
+      name: "Data Structures",
+      papers: {
+        first_ia: [{ id: "37", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample37", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "38", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample38", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "39", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample39", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "40", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample40", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Computer Organization",
+      papers: {
+        first_ia: [{ id: "41", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample41", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "42", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample42", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "43", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample43", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "44", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample44", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Discrete Mathematics",
+      papers: {
+        first_ia: [{ id: "45", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample45", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "46", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample46", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "47", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample47", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "48", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample48", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "4th Semester": [
+    {
+      name: "Algorithms",
+      papers: {
+        first_ia: [{ id: "49", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample49", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "50", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample50", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "51", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample51", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "52", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample52", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Database Systems",
+      papers: {
+        first_ia: [{ id: "53", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample53", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "54", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample54", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "55", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample55", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "56", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample56", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "5th Semester": [
+    {
+      name: "Software Engineering",
+      papers: {
+        first_ia: [{ id: "57", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample57", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "58", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample58", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "59", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample59", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "60", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample60", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Computer Networks",
+      papers: {
+        first_ia: [{ id: "61", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample61", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "62", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample62", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "63", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample63", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "64", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample64", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "6th Semester": [
+    {
+      name: "Web Technologies",
+      papers: {
+        first_ia: [{ id: "65", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample65", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "66", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample66", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "67", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample67", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "68", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample68", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Mobile Computing",
+      papers: {
+        first_ia: [{ id: "69", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample69", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "70", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample70", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "71", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample71", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "72", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample72", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "7th Semester": [
+    {
+      name: "Machine Learning",
+      papers: {
+        first_ia: [{ id: "73", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample73", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "74", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample74", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "75", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample75", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "76", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample76", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Cloud Computing",
+      papers: {
+        first_ia: [{ id: "77", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample77", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "78", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample78", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "79", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample79", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "80", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample80", paper_type: "final", year: 2023 }]
+      }
+    }
+  ],
+  "8th Semester": [
+    {
+      name: "Project Work",
+      papers: {
+        first_ia: [{ id: "81", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample81", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "82", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample82", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "83", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample83", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "84", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample84", paper_type: "final", year: 2023 }]
+      }
+    },
+    {
+      name: "Industry Internship",
+      papers: {
+        first_ia: [{ id: "85", paper_name: "First IA 2023", download_url: "https://drive.google.com/file/d/sample85", paper_type: "first_ia", year: 2023 }],
+        second_ia: [{ id: "86", paper_name: "Second IA 2023", download_url: "https://drive.google.com/file/d/sample86", paper_type: "second_ia", year: 2023 }],
+        third_ia: [{ id: "87", paper_name: "Third IA 2023", download_url: "https://drive.google.com/file/d/sample87", paper_type: "third_ia", year: 2023 }],
+        final: [{ id: "88", paper_name: "Final Exam 2023", download_url: "https://drive.google.com/file/d/sample88", paper_type: "final", year: 2023 }]
+      }
+    }
+  ]
+};
+
 const SemesterSection = () => {
   const [openSemesters, setOpenSemesters] = useState<{ [key: string]: boolean }>({});
   const [openSubjects, setOpenSubjects] = useState<{ [key: string]: boolean }>({});
-  const [semesterData, setSemesterData] = useState<SemesterData>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPapers();
-  }, []);
-
-  const fetchPapers = async () => {
-    try {
-      const { data: papers, error } = await supabase
-        .from('papers')
-        .select('*')
-        .order('semester', { ascending: true })
-        .order('subject_name', { ascending: true });
-
-      if (error) throw error;
-
-      // Group papers by semester and subject
-      const grouped: SemesterData = {};
-      
-      papers?.forEach((paper) => {
-        const semesterKey = `${paper.semester}${getSemesterSuffix(paper.semester)} Semester`;
-        
-        if (!grouped[semesterKey]) {
-          grouped[semesterKey] = [];
-        }
-
-        // Find or create subject
-        let subject = grouped[semesterKey].find(s => s.name === paper.subject_name);
-        if (!subject) {
-          subject = {
-            name: paper.subject_name,
-            papers: {
-              first_ia: [],
-              second_ia: [],
-              third_ia: [],
-              final: []
-            }
-          };
-          grouped[semesterKey].push(subject);
-        }
-
-        // Add paper to appropriate category
-        const paperObj = {
-          id: paper.id,
-          paper_name: paper.paper_name,
-          download_url: paper.download_url,
-          paper_type: paper.paper_type,
-          year: paper.year
-        };
-
-        if (paper.paper_type === 'first_ia') {
-          subject.papers.first_ia.push(paperObj);
-        } else if (paper.paper_type === 'second_ia') {
-          subject.papers.second_ia.push(paperObj);
-        } else if (paper.paper_type === 'third_ia') {
-          subject.papers.third_ia.push(paperObj);
-        } else if (paper.paper_type === 'final') {
-          subject.papers.final.push(paperObj);
-        }
-      });
-
-      setSemesterData(grouped);
-    } catch (error) {
-      console.error('Error fetching papers:', error);
-      toast.error('Failed to load papers');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getSemesterSuffix = (semester: number) => {
-    if (semester === 1) return 'st';
-    if (semester === 2) return 'nd';
-    if (semester === 3) return 'rd';
-    return 'th';
-  };
 
   const toggleSemester = (semester: string) => {
     setOpenSemesters(prev => ({
@@ -129,19 +269,6 @@ const SemesterSection = () => {
     toast.success(`Opening ${paperName}`);
   };
 
-  if (loading) {
-    return (
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">Loading papers...</span>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="py-16 px-4 animate-fadeIn">
       <div className="container mx-auto">
@@ -158,7 +285,7 @@ const SemesterSection = () => {
         </div>
         
         <div className="max-w-6xl mx-auto space-y-6">
-          {Object.entries(semesterData).map(([semester, subjects]) => (
+          {Object.entries(mockSemesterData).map(([semester, subjects]) => (
             <Card 
               key={semester} 
               className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-l-4 border-l-blue-500"
