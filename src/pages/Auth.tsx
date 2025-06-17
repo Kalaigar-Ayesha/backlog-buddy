@@ -20,6 +20,10 @@ const Auth = () => {
   const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
 
+  // Admin credentials
+  const ADMIN_EMAIL = 'ayesha389922@gmail.com';
+  const ADMIN_PASSWORD = 'Ayesha@0101';
+
   useEffect(() => {
     if (user) {
       navigate('/');
@@ -31,23 +35,37 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const { error } = await signUp(email, password, fullName);
+      if (activeTab === 'admin') {
+        // Admin login validation
+        if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+          toast.error('Invalid admin credentials');
+          setLoading(false);
+          return;
+        }
+        
+        // Use the admin credentials to sign in
+        const { error } = await signIn(ADMIN_EMAIL, ADMIN_PASSWORD);
         if (error) {
-          toast.error(error.message);
+          toast.error('Admin login failed');
         } else {
-          toast.success('Account created successfully! Please check your email for verification.');
+          toast.success('Admin signed in successfully!');
+          navigate('/dashboard');
         }
       } else {
-        const { error } = await signIn(email, password);
-        if (error) {
-          toast.error(error.message);
-        } else {
-          toast.success('Signed in successfully!');
-          // Check if admin email and redirect accordingly
-          if (activeTab === 'admin' && email.includes('admin')) {
-            navigate('/dashboard');
+        // Student login/signup
+        if (isSignUp) {
+          const { error } = await signUp(email, password, fullName);
+          if (error) {
+            toast.error(error.message);
           } else {
+            toast.success('Account created successfully! Please check your email for verification.');
+          }
+        } else {
+          const { error } = await signIn(email, password);
+          if (error) {
+            toast.error(error.message);
+          } else {
+            toast.success('Signed in successfully!');
             navigate('/');
           }
         }
@@ -58,6 +76,14 @@ const Auth = () => {
       setLoading(false);
     }
   };
+
+  // Reset form when switching tabs
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setFullName('');
+    setIsSignUp(false);
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -73,12 +99,15 @@ const Auth = () => {
               </h1>
             </div>
             <CardTitle className="text-2xl font-bold">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {activeTab === 'admin' ? 'Admin Login' : (isSignUp ? 'Create Account' : 'Welcome Back')}
             </CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? 'Join PaperHub to access question papers' 
-                : 'Sign in to your account to continue'
+              {activeTab === 'admin' 
+                ? 'Enter admin credentials to access dashboard'
+                : (isSignUp 
+                  ? 'Join PaperHub to access question papers' 
+                  : 'Sign in to your account to continue'
+                )
               }
             </CardDescription>
           </CardHeader>
@@ -97,7 +126,7 @@ const Auth = () => {
             </Tabs>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
+              {isSignUp && activeTab === 'student' && (
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
@@ -116,15 +145,12 @@ const Auth = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder={activeTab === 'admin' ? "Enter admin email" : "Enter your email"}
+                  placeholder={activeTab === 'admin' ? "Admin email" : "Enter your email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                 />
-                {activeTab === 'admin' && (
-                  <p className="text-xs text-gray-500">Admin emails must contain 'admin' in the address</p>
-                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -143,27 +169,33 @@ const Auth = () => {
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
                 disabled={loading}
               >
-                {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : `Sign In as ${activeTab === 'admin' ? 'Admin' : 'Student'}`)}
+                {loading ? 'Please wait...' : (
+                  activeTab === 'admin' ? 'Sign In as Admin' : 
+                  (isSignUp ? 'Create Account' : 'Sign In as Student')
+                )}
               </Button>
             </form>
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
-              >
-                {isSignUp 
-                  ? 'Already have an account? Sign in' 
-                  : "Don't have an account? Sign up"
-                }
-              </button>
-            </div>
+            
+            {activeTab === 'student' && (
+              <div className="mt-4 text-center">
+                <button
+                  type="button"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                >
+                  {isSignUp 
+                    ? 'Already have an account? Sign in' 
+                    : "Don't have an account? Sign up"
+                  }
+                </button>
+              </div>
+            )}
             
             {activeTab === 'admin' && (
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700">
+              <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                <p className="text-xs text-orange-700">
                   <Shield className="w-4 h-4 inline mr-1" />
-                  Admin access allows you to manage question papers and view the dashboard.
+                  Admin access is restricted to authorized personnel only.
                 </p>
               </div>
             )}
