@@ -314,7 +314,7 @@ const SemesterSection = () => {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="transition-all duration-300">
                   <CardContent className="space-y-6 pt-0">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6">
                       {subjects.map((subject, index) => {
                         const subjectKey = `${semester}-${index}`;
                         return (
@@ -337,35 +337,37 @@ const SemesterSection = () => {
                               </CollapsibleTrigger>
                               <CollapsibleContent>
                                 <CardContent className="pt-0">
-                                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                  <div className="space-y-4">
                                     {[
-                                      { title: 'First IA', papers: subject.papers.first_ia, color: 'bg-green-50 border-green-200 hover:bg-green-100' },
-                                      { title: 'Second IA', papers: subject.papers.second_ia, color: 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100' },
-                                      { title: 'Third IA', papers: subject.papers.third_ia, color: 'bg-orange-50 border-orange-200 hover:bg-orange-100' },
-                                      { title: 'Final', papers: subject.papers.final, color: 'bg-red-50 border-red-200 hover:bg-red-100' },
+                                      { title: 'First IA', papers: subject.papers.first_ia, color: 'bg-green-50 border-green-200' },
+                                      { title: 'Second IA', papers: subject.papers.second_ia, color: 'bg-yellow-50 border-yellow-200' },
+                                      { title: 'Third IA', papers: subject.papers.third_ia, color: 'bg-orange-50 border-orange-200' },
+                                      { title: 'Final', papers: subject.papers.final, color: 'bg-red-50 border-red-200' },
                                     ].map((category) => (
-                                      <div key={category.title} className={`space-y-2 p-3 rounded-lg border ${category.color} transition-colors duration-200`}>
-                                        <h4 className="font-semibold text-gray-800 text-center text-sm">
+                                      <div key={category.title} className={`p-4 rounded-lg border ${category.color}`}>
+                                        <h4 className="font-semibold text-gray-800 mb-3 text-base">
                                           {category.title}
                                         </h4>
-                                        {category.papers.length > 0 ? (
-                                          category.papers.map((paper, paperIndex) => (
-                                            <Button
-                                              key={paperIndex}
-                                              variant="outline"
-                                              size="sm"
-                                              className="w-full text-xs hover:bg-white hover:border-blue-300 transition-all duration-200 transform hover:scale-105"
-                                              onClick={() => handleDownload(paper.download_url, paper.paper_name)}
-                                            >
-                                              <Download className="w-3 h-3 mr-1" />
-                                              {paper.paper_name}
-                                            </Button>
-                                          ))
-                                        ) : (
-                                          <div className="text-xs text-gray-500 text-center py-2">
-                                            No papers available
-                                          </div>
-                                        )}
+                                        <div className="space-y-2">
+                                          {category.papers.length > 0 ? (
+                                            category.papers.map((paper, paperIndex) => (
+                                              <Button
+                                                key={paperIndex}
+                                                variant="outline"
+                                                size="sm"
+                                                className="w-full justify-start text-left text-sm hover:bg-white hover:border-blue-300 transition-all duration-200 transform hover:scale-[1.02] p-3 h-auto"
+                                                onClick={() => handleDownload(paper.download_url, paper.paper_name)}
+                                              >
+                                                <Download className="w-4 h-4 mr-2 flex-shrink-0" />
+                                                <span className="truncate">{paper.paper_name}</span>
+                                              </Button>
+                                            ))
+                                          ) : (
+                                            <div className="text-sm text-gray-500 py-4 text-center">
+                                              No papers available
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
                                     ))}
                                   </div>
