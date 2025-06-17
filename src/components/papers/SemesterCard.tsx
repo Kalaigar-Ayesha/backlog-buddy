@@ -15,6 +15,7 @@ interface Paper {
 
 interface Subject {
   name: string;
+  code: string;
   papers: {
     first_ia: Paper[];
     second_ia: Paper[];
