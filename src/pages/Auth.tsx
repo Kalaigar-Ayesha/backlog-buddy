@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Shield, User } from 'lucide-react';
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -14,6 +16,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('student');
   const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -41,7 +44,12 @@ const Auth = () => {
           toast.error(error.message);
         } else {
           toast.success('Signed in successfully!');
-          navigate('/');
+          // Check if admin email and redirect accordingly
+          if (activeTab === 'admin' && email.includes('admin')) {
+            navigate('/dashboard');
+          } else {
+            navigate('/');
+          }
         }
       }
     } catch (error) {
@@ -58,10 +66,10 @@ const Auth = () => {
           <CardHeader className="space-y-1 text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">BB</span>
+                <span className="text-white font-bold">PH</span>
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                BacklogBuddy
+                PaperHub
               </h1>
             </div>
             <CardTitle className="text-2xl font-bold">
@@ -69,12 +77,25 @@ const Auth = () => {
             </CardTitle>
             <CardDescription>
               {isSignUp 
-                ? 'Join BacklogBuddy to access question papers' 
+                ? 'Join PaperHub to access question papers' 
                 : 'Sign in to your account to continue'
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="student" className="flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span>Student</span>
+                </TabsTrigger>
+                <TabsTrigger value="admin" className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4" />
+                  <span>Admin</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
                 <div className="space-y-2">
@@ -95,12 +116,15 @@ const Auth = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={activeTab === 'admin' ? "Enter admin email" : "Enter your email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                 />
+                {activeTab === 'admin' && (
+                  <p className="text-xs text-gray-500">Admin emails must contain 'admin' in the address</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -119,7 +143,7 @@ const Auth = () => {
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
                 disabled={loading}
               >
-                {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+                {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : `Sign In as ${activeTab === 'admin' ? 'Admin' : 'Student'}`)}
               </Button>
             </form>
             <div className="mt-4 text-center">
@@ -134,6 +158,15 @@ const Auth = () => {
                 }
               </button>
             </div>
+            
+            {activeTab === 'admin' && (
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-blue-700">
+                  <Shield className="w-4 h-4 inline mr-1" />
+                  Admin access allows you to manage question papers and view the dashboard.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

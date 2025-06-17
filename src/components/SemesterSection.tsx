@@ -3,12 +3,13 @@ import React, { useState, useMemo } from 'react';
 import { GraduationCap } from 'lucide-react';
 import SemesterCard from './papers/SemesterCard';
 import SearchBar from './papers/SearchBar';
-import { mockSemesterData } from './papers/mockData';
+import { usePapers } from '@/hooks/usePapers';
 
 const SemesterSection = () => {
   const [openSemesters, setOpenSemesters] = useState<{ [key: string]: boolean }>({});
   const [openSubjects, setOpenSubjects] = useState<{ [key: string]: boolean }>({});
   const [searchTerm, setSearchTerm] = useState('');
+  const { semesterData } = usePapers();
 
   const toggleSemester = (semester: string) => {
     setOpenSemesters(prev => ({
@@ -27,13 +28,13 @@ const SemesterSection = () => {
   // Filter semesters and subjects based on search term
   const filteredData = useMemo(() => {
     if (!searchTerm.trim()) {
-      return mockSemesterData;
+      return semesterData;
     }
 
     const searchLower = searchTerm.toLowerCase();
-    const filtered: typeof mockSemesterData = {};
+    const filtered: typeof semesterData = {};
 
-    Object.entries(mockSemesterData).forEach(([semester, subjects]) => {
+    Object.entries(semesterData).forEach(([semester, subjects]) => {
       // Check if semester matches search term
       const semesterMatches = semester.toLowerCase().includes(searchLower) ||
                              semester.match(/\d+/)?.[0]?.includes(searchTerm);
@@ -51,7 +52,7 @@ const SemesterSection = () => {
     });
 
     return filtered;
-  }, [searchTerm]);
+  }, [searchTerm, semesterData]);
 
   // Auto-expand semesters when searching
   React.useEffect(() => {

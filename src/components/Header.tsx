@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, Settings } from 'lucide-react';
+import { GraduationCap, LogOut, Settings, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -34,6 +34,9 @@ const Header = () => {
       }
     }
   };
+
+  // Check if user is admin (simple check - in production you'd want proper role management)
+  const isAdmin = user?.email?.includes('admin') || false;
 
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -71,17 +74,19 @@ const Header = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate('/dashboard')}
-                  className="hidden md:flex items-center space-x-2"
-                >
-                  <Settings className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </Button>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/dashboard')}
+                    className="hidden md:flex items-center space-x-2 border-orange-200 text-orange-700 hover:bg-orange-50"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span>Admin Panel</span>
+                  </Button>
+                )}
                 <span className="text-sm text-gray-600 hidden md:block">
-                  Welcome, {user.email}
+                  Welcome, {isAdmin ? '👑 Admin' : user.email}
                 </span>
                 <Button
                   variant="outline"
