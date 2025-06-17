@@ -17,9 +17,21 @@ const Header = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.querySelector(`[data-section="${sectionId}"]`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    // First navigate to home page if not already there
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation to complete, then scroll
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -42,12 +54,18 @@ const Header = () => {
             >
               Papers
             </button>
-            <a href="#feedback" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <button
+              onClick={() => scrollToSection('feedback')}
+              className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
+            >
               Feedback
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            </button>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
+            >
               Contact
-            </a>
+            </button>
           </nav>
 
           <div className="flex items-center space-x-3">

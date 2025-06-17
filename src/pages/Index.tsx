@@ -12,11 +12,15 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Header />
       <Hero />
-      <div data-section="semesters">
+      <div id="semesters" data-section="semesters">
         <SemesterSection />
       </div>
-      <FeedbackSection />
-      <ContactSection />
+      <div id="feedback">
+        <FeedbackSection />
+      </div>
+      <div id="contact">
+        <ContactSection />
+      </div>
       <Footer />
     </div>
   );

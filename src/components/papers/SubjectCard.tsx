@@ -15,6 +15,7 @@ interface Paper {
 
 interface Subject {
   name: string;
+  code: string;
   papers: {
     first_ia: Paper[];
     second_ia: Paper[];
@@ -44,9 +45,14 @@ const SubjectCard = ({ subject, subjectKey, isOpen, onToggle }: SubjectCardProps
         <CollapsibleTrigger asChild>
           <CardHeader className="cursor-pointer hover:bg-indigo-50 transition-colors duration-200 pb-3">
             <CardTitle className="flex items-center justify-between text-lg">
-              <span className="font-semibold text-gray-800">{subject.name}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-1 sm:space-y-0">
+                <span className="font-semibold text-gray-800 text-sm sm:text-base break-words">{subject.name}</span>
+                <span className="text-xs sm:text-sm bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-medium self-start">
+                  {subject.code}
+                </span>
+              </div>
               <ChevronDown 
-                className={`w-5 h-5 transition-transform duration-200 text-indigo-600 ${
+                className={`w-5 h-5 transition-transform duration-200 text-indigo-600 flex-shrink-0 ${
                   isOpen ? 'rotate-180' : ''
                 }`} 
               />
@@ -55,7 +61,7 @@ const SubjectCard = ({ subject, subjectKey, isOpen, onToggle }: SubjectCardProps
         </CollapsibleTrigger>
         <CollapsibleContent>
           <CardContent className="pt-0">
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {paperCategories.map((category) => (
                 <PaperCard
                   key={category.title}
