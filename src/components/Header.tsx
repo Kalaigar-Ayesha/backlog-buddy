@@ -35,8 +35,8 @@ const Header = () => {
     }
   };
 
-  // Check if user is admin (simple check - in production you'd want proper role management)
-  const isAdmin = user?.email?.includes('admin') || false;
+  // Check if user is admin
+  const isAdmin = user?.email === 'ayesha389922@gmail.com';
 
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -52,7 +52,7 @@ const Header = () => {
           
           <nav className="hidden md:flex items-center space-x-6">
             <button 
-              onClick={() => scrollToSection('semesters')}
+              onClick={() => scrollToSection('branches')}
               className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
             >
               Papers

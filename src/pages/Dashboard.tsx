@@ -16,10 +16,11 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { semesterData, addPaper } = usePapers();
+  const { branchData, addPaper } = usePapers();
   const navigate = useNavigate();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
+    branch: '',
     semester: '',
     subjectCode: '',
     paperType: '',
@@ -29,7 +30,7 @@ const Dashboard = () => {
   });
 
   // Check if user is admin
-  const isAdmin = user?.email?.includes('admin') || false;
+  const isAdmin = user?.email === 'ayesha389922@gmail.com';
 
   // Redirect non-admin users
   React.useEffect(() => {
@@ -51,32 +52,36 @@ const Dashboard = () => {
     );
   }
 
-  // Get all subjects with their semester info for the dropdown
-  const allSubjects = Object.entries(semesterData).flatMap(([semester, subjects]) =>
-    subjects.map(subject => ({ ...subject, semester }))
+  // Get all subjects with their branch and semester info for the dropdown
+  const allSubjects = Object.entries(branchData).flatMap(([branch, semesters]) =>
+    Object.entries(semesters).flatMap(([semester, subjects]) =>
+      subjects.map(subject => ({ ...subject, branch, semester }))
+    )
   );
 
   // Get papers count
-  const totalPapers = Object.values(semesterData).reduce((total, subjects) => {
-    return total + subjects.reduce((subjectTotal, subject) => {
-      return subjectTotal + 
-        subject.papers.first_ia.length + 
-        subject.papers.second_ia.length + 
-        subject.papers.third_ia.length + 
-        subject.papers.final.length;
+  const totalPapers = Object.values(branchData).reduce((total, semesters) => {
+    return total + Object.values(semesters).reduce((semesterTotal, subjects) => {
+      return semesterTotal + subjects.reduce((subjectTotal, subject) => {
+        return subjectTotal + 
+          subject.papers.first_ia.length + 
+          subject.papers.second_ia.length + 
+          subject.papers.third_ia.length + 
+          subject.papers.final.length;
+      }, 0);
     }, 0);
   }, 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.semester || !formData.subjectCode || !formData.paperType || !formData.paperName || !formData.downloadUrl) {
+    if (!formData.branch || !formData.semester || !formData.subjectCode || !formData.paperType || !formData.paperName || !formData.downloadUrl) {
       toast.error('Please fill in all required fields');
       return;
     }
 
     try {
-      addPaper(formData.semester, formData.subjectCode, formData.paperType, {
+      addPaper(formData.branch, formData.semester, formData.subjectCode, formData.paperType, {
         paper_name: formData.paperName,
         download_url: formData.downloadUrl,
         paper_type: formData.paperType,
@@ -84,6 +89,7 @@ const Dashboard = () => {
       });
 
       setFormData({
+        branch: '',
         semester: '',
         subjectCode: '',
         paperType: '',
@@ -98,8 +104,12 @@ const Dashboard = () => {
     }
   };
 
-  // Get subjects for selected semester
-  const subjectsForSemester = formData.semester ? semesterData[formData.semester] || [] : [];
+  // Get semesters for selected branch
+  const semestersForBranch = formData.branch ? Object.keys(branchData[formData.branch] || {}) : [];
+  
+  // Get subjects for selected branch and semester
+  const subjectsForSemester = formData.branch && formData.semester ? 
+    branchData[formData.branch]?.[formData.semester] || [] : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -110,10 +120,10 @@ const Dashboard = () => {
             <Shield className="w-8 h-8 text-orange-600" />
             <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           </div>
-          <p className="text-gray-600">Manage question papers for all semesters - changes reflect instantly on the website</p>
+          <p className="text-gray-600">Manage question papers for all branches and semesters - changes reflect instantly on the website</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -142,10 +152,22 @@ const Dashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-orange-100">Semesters</p>
-                  <p className="text-2xl font-bold">8</p>
+                  <p className="text-orange-100">Branches</p>
+                  <p className="text-2xl font-bold">{Object.keys(branchData).length}</p>
                 </div>
                 <Shield className="w-8 h-8 text-orange-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100">Total Semesters</p>
+                  <p className="text-2xl font-bold">48</p>
+                </div>
+                <FileText className="w-8 h-8 text-purple-200" />
               </div>
             </CardContent>
           </Card>
@@ -168,13 +190,27 @@ const Dashboard = () => {
                   </DialogHeader>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
+                      <Label htmlFor="branch">Branch *</Label>
+                      <Select value={formData.branch} onValueChange={(value) => setFormData({...formData, branch: value, semester: '', subjectCode: ''})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select branch" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.keys(branchData).map(branch => (
+                            <SelectItem key={branch} value={branch}>{branch}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
                       <Label htmlFor="semester">Semester *</Label>
                       <Select value={formData.semester} onValueChange={(value) => setFormData({...formData, semester: value, subjectCode: ''})}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select semester" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.keys(semesterData).map(semester => (
+                          {semestersForBranch.map(semester => (
                             <SelectItem key={semester} value={semester}>{semester}</SelectItem>
                           ))}
                         </SelectContent>
@@ -259,7 +295,7 @@ const Dashboard = () => {
             <div className="text-center py-8 text-gray-500">
               <FileText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>Papers added through this dashboard will appear instantly on the main website.</p>
-              <p className="text-sm mt-2">Use the "Add Paper" button above to start adding question papers.</p>
+              <p className="text-sm mt-2">Use the "Add Paper" button above to start adding question papers by branch and semester.</p>
             </div>
           </CardContent>
         </Card>

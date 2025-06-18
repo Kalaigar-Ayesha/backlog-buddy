@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Hero from '../components/Hero';
-import SemesterSection from '../components/SemesterSection';
+import BranchSection from '../components/BranchSection';
 import FeedbackSection from '../components/FeedbackSection';
 import ContactSection from '../components/ContactSection';
 import Header from '../components/Header';
@@ -12,8 +12,8 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Header />
       <Hero />
-      <div id="semesters" data-section="semesters">
-        <SemesterSection />
+      <div id="branches" data-section="branches">
+        <BranchSection />
       </div>
       <div id="feedback">
         <FeedbackSection />
