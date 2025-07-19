@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import BranchCard from '@/components/papers/BranchCard';
+import SemesterCard from '@/components/papers/SemesterCard';
 import SearchBar from '@/components/papers/SearchBar';
 import { usePapers } from '@/hooks/usePapers';
 import Header from '@/components/Header';
@@ -123,7 +123,7 @@ const BranchDetails = () => {
             </div>
           </div>
           
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto space-y-6">
             {!filteredSemesters || Object.keys(filteredSemesters).length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-500 text-lg mb-2">No results found</div>
@@ -132,16 +132,20 @@ const BranchDetails = () => {
                 </div>
               </div>
             ) : (
-              <BranchCard
-                branch={decodedBranchName}
-                semesters={filteredSemesters}
-                isOpen={true}
-                onToggle={() => {}}
-                openSemesters={openSemesters}
-                onSemesterToggle={toggleSemester}
-                openSubjects={openSubjects}
-                onSubjectToggle={toggleSubject}
-              />
+              Object.entries(filteredSemesters).map(([semester, subjects]) => {
+                const semesterKey = `${decodedBranchName}-${semester}`;
+                return (
+                  <SemesterCard
+                    key={semesterKey}
+                    semester={semester}
+                    subjects={subjects}
+                    isOpen={openSemesters[semesterKey] || false}
+                    onToggle={() => toggleSemester(semesterKey)}
+                    openSubjects={openSubjects}
+                    onSubjectToggle={toggleSubject}
+                  />
+                );
+              })
             )}
           </div>
           
