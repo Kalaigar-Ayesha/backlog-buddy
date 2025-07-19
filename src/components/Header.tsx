@@ -85,9 +85,11 @@ const Header = () => {
                     <span>Admin Panel</span>
                   </Button>
                 )}
-                <span className="text-sm text-gray-600 hidden md:block">
-                  Welcome, {isAdmin ? '👑 Admin' : user.email}
-                </span>
+                {isAdmin && (
+                  <span className="text-sm text-gray-600 hidden md:block">
+                    Welcome, 👑 Admin
+                  </span>
+                )}
                 <Button
                   variant="outline"
                   size="sm"

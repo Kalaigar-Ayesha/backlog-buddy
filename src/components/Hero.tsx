@@ -6,7 +6,12 @@ import { GraduationCap, BookOpen, Users } from 'lucide-react';
 const Hero = () => {
   const scrollToSemesters = () => {
     const semesterSection = document.querySelector('[data-section="semesters"]');
-    semesterSection?.scrollIntoView({ behavior: 'smooth' });
+    if (semesterSection) {
+      semesterSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Navigate to papers if section not found
+      window.location.hash = '#branches';
+    }
   };
 
   return (
@@ -35,9 +40,9 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Without backlog, you won't be able to become a good engineer. 
+            Access previous year question papers for Kishkinda University students. 
             <br />
-            <span className="font-semibold text-blue-600">Just chill and clear with Buddy.</span>
+            <span className="font-semibold text-blue-600">Study smart, succeed with confidence.</span>
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
