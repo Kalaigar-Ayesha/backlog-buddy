@@ -35,8 +35,8 @@ const Header = () => {
     }
   };
 
-  // Check if user is admin
-  const isAdmin = user?.email === 'ayesha389922@gmail.com';
+  // Check if user is admin - be strict about email comparison
+  const isAdmin = user?.email?.toLowerCase().trim() === 'ayesha389922@gmail.com';
 
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
