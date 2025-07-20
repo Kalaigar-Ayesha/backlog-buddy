@@ -17,7 +17,7 @@ const Footer = () => {
         </p>
         <div className="border-t border-gray-800 pt-6">
           <p className="text-gray-500">
-            © 2024 BacklogBuddy. Made with ❤️ for students.
+            © 2025 BacklogBuddy. Made with ❤️ for Kishkinda University students.
           </p>
         </div>
       </div>

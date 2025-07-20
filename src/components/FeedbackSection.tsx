@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const FeedbackSection = () => {
   const handleFeedbackClick = () => {
-    window.open('https://forms.google.com/your-feedback-form', '_blank');
+    window.open('https://forms.gle/tXUAwbp62oQYu6QX7', '_blank');
   };
 
   return (
