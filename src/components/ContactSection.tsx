@@ -24,7 +24,7 @@ const ContactSection = () => {
           </CardHeader>
           <CardContent>
             <p className="text-lg text-gray-700 mb-8">
-              Share your feedback or upload question papers to help fellow students at Kishkinda University.
+              Share your feedback or upload question papers to help fellow students at <span className="font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Kishkinda University</span>.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 

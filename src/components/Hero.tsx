@@ -40,7 +40,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Access previous year question papers for Kishkinda University students. 
+            Access previous year question papers for <span className="font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Kishkinda University</span> students. 
             <br />
             <span className="font-semibold text-blue-600">Study smart, succeed with confidence.</span>
           </p>
