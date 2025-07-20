@@ -1,4 +1,4 @@
-# 👋 Welcome to BacklogBuddy
+#  Welcome to BacklogBuddy
 
 **BacklogBuddy** is a website made for students who want to download previous year question papers easily. No logins, no confusion — just direct download links, semester-wise and subject-wise.
 
@@ -31,7 +31,7 @@ I wanted to help juniors and batchmates easily access past question papers witho
 
 ---
 
-- 🌐 Live Site: [BacklogBuddy.in](https://your-website-link.com)
+- 🌐 Live Site: [BacklogBuddy]((https://backlog-buddy.vercel.app/))
 
 ---
 
