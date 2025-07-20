@@ -1,73 +1,45 @@
-# Welcome to your Lovable project
+# 👋 Welcome to BacklogBuddy
 
-## Project info
+**BacklogBuddy** is a website made for students who want to download previous year question papers easily. No logins, no confusion — just direct download links, semester-wise and subject-wise.
 
-**URL**: https://lovable.dev/projects/cb51bc3e-420b-4c60-9990-e1d970d48b27
+---
 
-## How can I edit this code?
+## 🎯 What This Website Does
 
-There are several ways of editing your application.
+- 📚 Lets students download old question papers (1st & 2nd semester)
+- 🧠 Divides papers into:
+  - 1st IA, 2nd IA, 3rd IA, and Final Exams
+- 🔗 Uses Google Drive links to host papers
+- 📝 Feedback form to share ideas or report issues
+- 📤 Upload form to let anyone share more question papers with us
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cb51bc3e-420b-4c60-9990-e1d970d48b27) and start prompting.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📌 How to Use
 
-**Use your preferred IDE**
+1. Open the site.
+2. Pick your semester.
+3. Click download on the subject you need.
+4. Done!
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🙌 Why I Built This
 
-Follow these steps:
+I wanted to help juniors and batchmates easily access past question papers without searching everywhere. This is a small step to make engineering life a little easier.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- 🌐 Live Site: [BacklogBuddy.in](https://your-website-link.com)
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## 📬 Want to Help?
 
-**Edit a file directly in GitHub**
+You can contribute by:
+- Suggesting ideas through the feedback form
+- Uploading more question papers
+- Forking and improving this project on GitHub
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/cb51bc3e-420b-4c60-9990-e1d970d48b27) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Thanks for checking this out! 🚀
