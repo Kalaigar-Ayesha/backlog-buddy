@@ -31,7 +31,10 @@ I wanted to help juniors and batchmates easily access past question papers witho
 
 ---
 
-- 🌐 Live Site: [BacklogBuddy]((https://backlog-buddy.vercel.app/))
+- # 📚 BacklogBuddy
+
+Live site: 🌐 [https://backlog-buddy.vercel.app](https://backlog-buddy.vercel.app)
+
 
 ---
 
