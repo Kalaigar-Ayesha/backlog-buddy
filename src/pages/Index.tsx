@@ -2,7 +2,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import BranchGrid from '../components/BranchGrid';
-import FeedbackSection from '../components/FeedbackSection';
+
 import ContactSection from '../components/ContactSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -14,9 +14,6 @@ const Index = () => {
       <Hero />
       <div id="branches" data-section="branches">
         <BranchGrid />
-      </div>
-      <div id="feedback">
-        <FeedbackSection />
       </div>
       <div id="contact">
         <ContactSection />

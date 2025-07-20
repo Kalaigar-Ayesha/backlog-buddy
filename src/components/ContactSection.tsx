@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Phone } from 'lucide-react';
+
 
 const ContactSection = () => {
   const handleFeedbackClick = () => {
@@ -39,7 +39,6 @@ const ContactSection = () => {
                 className="bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 onClick={handleUploadPapersClick}
               >
-                <Phone className="w-5 h-5 mr-2" />
                 Upload Papers
               </Button>
             </div>
